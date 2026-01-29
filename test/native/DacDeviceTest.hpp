@@ -16,12 +16,12 @@ constexpr int SAMPLE_COUNT = 1024;
 
 // drivers for DacBufferTest
 struct Drivers {
-	Loop_native loop;
+    Loop_native loop;
 
-	using Dac = BufferDevice_cout;
-	Dac dac{loop, "dac", 1s};
-	Dac::Buffer buffer1{SAMPLE_COUNT, dac};
-	Dac::Buffer buffer2{SAMPLE_COUNT, dac};
+    using Dac = BufferDevice_cout;
+    Dac dac{loop, "dac", 1s};
+    Dac::Buffer buffer1{SAMPLE_COUNT * sizeof(Sample), dac};
+    Dac::Buffer buffer2{SAMPLE_COUNT * sizeof(Sample), dac};
 };
 
 Drivers drivers;

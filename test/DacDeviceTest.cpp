@@ -56,6 +56,8 @@ Coroutine write(Loop &loop, Buffer &buffer1, Buffer &buffer2) {
 
 
 int main() {
+    debug::out << "DacDeviceTest\n";
+
     // write to dac
     write(drivers.loop, drivers.buffer1, drivers.buffer2);
 

@@ -1,6 +1,6 @@
 #include "Dac_DAC.hpp"
 #include <coco/bits.hpp>
-#include <coco/debug.hpp>
+//#include <coco/debug.hpp>
 
 
 #ifdef HAVE_DAC
@@ -8,53 +8,67 @@
 namespace coco {
 
 Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
-#ifdef HAVE_DAC_CLOCK_CONFIG
-    dac::ClockConfig clockConfig,
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+    Hertz<> ahbClock,
 #endif
-    dac::Config config)
+    int channel, dac::Config config)
 {
     // configure pins as analog
     for (auto pin : analogPins) {
-        gpio::configureAnalog(pin);
+        gpio::enableAnalog(pin);
     }
 
-    // initialize DAC
-    auto dac = this->dac = dacInfo.dac;
-    dacInfo.configure(
-#ifdef HAVE_DAC_CLOCK_CONFIG
-        clockConfig,
+    // configure DAC
+    auto dac = dac_ = dacInfo
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+        .enableClock(ahbClock)
+#else
+        .enableClock()
 #endif
-        config);
+        .enable(channel, config);
 
-    // always use 12 bit left aligned, i.e. simulated 16 bit
-#ifdef DAC_CR_EN2
-    bool ch1 = (config & dac::Config::CH1) != 0;
-    bool ch2 = (config & dac::Config::CH2) != 0;
-    if (ch1 && ch2) {
-        // dual channel
-        this->DR[0] = &dac->DHR12L1;
-        this->DR[1] = &dac->DHR12L2;
-        this->count = 2;
-    } else if (ch2) {
-        // only second channel
-        this->DR[0] = &dac->DHR12L2;
-        this->count = 1;
-    } else
+#ifdef HAVE_DAC_DUAL_MODE
+    DR_[0] = channel == 0 ? &dac->DHR12L1 : &dac->DHR12L2;
+#else
+    DR_[0] = &dac->DHR12L1;
 #endif
-    {
-        // only first channel
-        this->DR[0] = &dac->DHR12L1;
-        this->count = 1;
-    }
+    count_ = 1;
 }
+
+#ifdef HAVE_DAC_DUAL_MODE
+Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+    Hertz<> ahbClock,
+#endif
+    dac::DualConfig config)
+{
+    // configure pins as analog
+    for (auto pin : analogPins) {
+        gpio::enableAnalog(pin);
+    }
+
+    // configure DAC
+    auto dac = dac_ = dacInfo
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+        .enableClock(ahbClock)
+#else
+        .enableClock()
+#endif
+        .enable(config);
+
+    DR_[0] = &dac->DHR12L1;
+    DR_[1] = &dac->DHR12L2;
+    count_ = 2;
+}
+#endif
 
 Dac_DAC::~Dac_DAC() {
 }
 
 void Dac_DAC::set(int channel, int value) {
-    if (unsigned(channel) >= this->count)
+    if (unsigned(channel) >= count_)
         return;
-    *this->DR[channel] = value;
+    *DR_[channel] = value;
 }
 
 } // namespace coco

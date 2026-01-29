@@ -22,6 +22,8 @@ Coroutine write(Loop &loop, Dac &dac) {
 
 
 int main() {
+    debug::out << "DacTest\n";
+
     // write to dac
     write(drivers.loop, drivers.dac);
 

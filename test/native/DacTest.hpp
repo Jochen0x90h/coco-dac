@@ -13,9 +13,9 @@ constexpr auto AMPLITUDE = 127.5;
 
 // drivers for DacTest
 struct Drivers {
-	Loop_native loop;
+    Loop_native loop;
 
-	Dac_cout dac{"dac"};
+    Dac_cout dac{"dac"};
 };
 
 Drivers drivers;

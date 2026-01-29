@@ -12,21 +12,23 @@ constexpr auto OFFSET = 32000.0;
 constexpr auto AMPLITUDE = 30000.0;
 
 
-// DAC1 pins
+// DAC1 pins, use oscilloscope to measure the output
 const gpio::Config dacPins[] = {
-    gpio::PA4, // channel 1 (PA4)
-    gpio::PA5 // channel 2 (PA5)
+    gpio::PA4, // channel 1 (CN8 3)
+    gpio::PA5 // channel 2 (CN5 6) Note: green LED is connected to this pin, therefore debug::setGreen() etc. does not work
 };
 
 
-// drivers for DacTest
+/// @brief Drivers for DacTest
+/// Make sure the VREF jumper is at default position (1-2)
 struct Drivers {
     Loop_TIM2 loop{APB1_TIMER_CLOCK};
 
     using Dac = Dac_DAC;
     Dac dac{dacPins,
         dac::DAC1_INFO,
-        dac::DualConfig::CH2_OUTPUT_ENABLE}; // DAC1 of STM32F3348 has buffer off for channel 1 and output enable for channel 2
+        AHB_CLOCK,
+        dac::DualConfig::BUFFERED_EXTERNAL}; // DAC1 directly goes to pins
 };
 
 Drivers drivers;

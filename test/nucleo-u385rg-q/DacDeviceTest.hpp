@@ -8,11 +8,13 @@
 
 using namespace coco;
 
-
+/*
 //using Sample = int8_t;
-//constexpr auto FORMAT = dac::Format::RES8;
-//constexpr auto OFFSET = 127.0;
-//constexpr auto AMPLITUDE = 126.0;
+struct Sample {int8_t x; int8_t y;};
+constexpr auto FORMAT = dac::Format::RES_8;
+constexpr auto OFFSET = 127.0;
+constexpr auto AMPLITUDE = 125.0;
+*/
 struct Sample {int16_t x; int16_t y;};
 constexpr auto FORMAT = dac::Format::RES_12_LEFT;
 constexpr auto OFFSET = 32000.0;
@@ -21,14 +23,15 @@ constexpr auto AMPLITUDE = 30000.0;
 constexpr int SAMPLE_COUNT = 1024;
 
 
-// DAC1 pins
+// DAC1 pins, use oscilloscope to measure the output
 const gpio::Config dacPins[] = {
-    gpio::PA4, // channel 1 (PA4)
-    gpio::PA5 // channel 2 (PA5)
+    gpio::PA4, // channel 1 (CN8 3)
+    gpio::PA5 // channel 2 (CN5 5) Note: green LED is connected to this pin, therefore debug::setGreen() etc. does not work
 };
 
 
-// drivers for DacBufferTest
+/// @brief Drivers for DacDeviceTest
+/// Make sure the VREF jumper is at default position (1-2)
 struct Drivers {
     Loop_TIM2 loop{APB1_TIMER_CLOCK};
 
@@ -36,16 +39,17 @@ struct Drivers {
     Dac dac{loop,
         dacPins,
         dac::DAC1_INFO,
-        dma::DMA1_CH3_INFO,
-        dac::DualConfig::CH2_OUTPUT_ENABLE, // DAC1 of STM32F3348 has buffer off for channel 1 and output enable for channel 2
+        dma::DMA1_CH10_INFO,
+        AHB_CLOCK,
+        dac::DualConfig::EXTERNAL, // DAC1 directly goes to pins
         FORMAT,
-        dac::Trigger::DAC1_TIM6_TRGO};
+        dac::Trigger::DAC1_TIM4_TRGO};
     Dac::Buffer1<SAMPLE_COUNT * sizeof(Sample)> buffer1{dac};
     Dac::Buffer2<SAMPLE_COUNT * sizeof(Sample)> buffer2{buffer1};
 
     Drivers() {
         // start DAC trigger timer
-        timer::TIM6_INFO.enableClock()
+        timer::TIM4_INFO.enableClock()
             .setUpdateFrequency(APB1_TIMER_CLOCK, 10kHz)
             .setMasterMode(timer::MasterMode::UPDATE)
             .start();
@@ -55,7 +59,7 @@ struct Drivers {
 Drivers drivers;
 
 extern "C" {
-void DMA1_Channel3_IRQHandler() {
+void DMA1_Channel6_IRQHandler() {
     drivers.dac.DMA_IRQHandler();
 }
 }
