@@ -5,9 +5,8 @@
 
 namespace coco {
 
-/**
- * Dummy DAC interface implementation that does nothing
- */
+/// @brief Dummy DAC interface implementation that does nothing
+///
 class DacDummy : public Dac {
 public:
 	~DacDummy() override;

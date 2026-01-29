@@ -12,46 +12,36 @@
 
 namespace coco {
 
-/**
- * Digital/analog converter implementation for STM32.
- *
- * Reference manual:
- *   f3:
- *     https://www.st.com/resource/en/reference_manual/rm0364-stm32f334xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
- *       DAC: Section 14
- *   g4:
- *     https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
- *       DAC: Section 22
- * Resources:
- *   DACx
- */
+/// @brief Digital/analog converter implementation for STM32.
+///
+/// Resources:
+///   DAC
 class Dac_DAC : public Dac {
 public:
-    /**
-     * Constructor for the dual channel ADC device.
-     * @param analogPins analog pins
-     * @param dacInfo info of DAC to use
-     * @param clockConfig clock configuration
-     * @param config configuration of DAC channels
-     */
-    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
-#ifdef HAVE_DAC_CLOCK_CONFIG
-        dac::ClockConfig clockConfig,
-#endif
-        dac::Config config);
 
-#ifdef HAVE_DAC_CLOCK_CONFIG
-    /**
-     * Convenience constructor with parameter for AHB clock frequency
-     * @param analogPins analog pins
-     * @param dacInfo info of DAC to use
-     * @param ahbClock AHB clock frequency (gets converted to clockConfig)
-     * @param config configuration of DAC channels
-     */
-    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo, Hertz<> ahbClock, dac::Config config)
-        : Dac_DAC(analogPins, dacInfo, dac::ClockConfig((ahbClock.value - 1) / 80000000 << DAC_MCR_HFSEL_Pos),
-        config)
-    {}
+    /// @brief Constructor for the dual channel ADC device.
+    /// @param analogPins Analog pins
+    /// @param dacInfo Info of DAC to use
+    /// @param ahbClock Frequency of AHB clock
+    /// @param channel Channel index (0 for channel 1, 1 for channel 2)
+    /// @param config Configuration of DAC channel
+    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+        Hertz<> ahbClock,
+#endif
+        int channel, dac::Config config);
+
+#ifdef HAVE_DAC_DUAL_MODE
+    /// @brief Constructor for the dual channel ADC device.
+    /// @param analogPins Analog pins
+    /// @param dacInfo Info of DAC to use
+    /// @param ahbClock Frequency of AHB clock
+    /// @param config Configuration of both DAC channels
+    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+#ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
+        Hertz<> ahbClock,
+#endif
+        dac::DualConfig config);
 #endif
 
     ~Dac_DAC() override;
@@ -61,11 +51,11 @@ public:
 protected:
 
     // DAC
-    DAC_TypeDef *dac;
+    DAC_TypeDef *dac_;
 
     // data regsiters
-    unsigned count;
-    __IO uint32_t *DR[2];
+    unsigned count_;
+    __IO uint32_t *DR_[2];
 };
 
 } // namespace coco
