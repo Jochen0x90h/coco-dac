@@ -150,14 +150,12 @@ DacDevice_DAC_DMA::BufferBase::BufferBase(uint8_t *data, int capacity, DacDevice
 DacDevice_DAC_DMA::BufferBase::~BufferBase() {
 }
 
-bool DacDevice_DAC_DMA::BufferBase::start(Op op) {
-    if (st.state != State::READY) {
-        assert(st.state != State::BUSY);
+bool DacDevice_DAC_DMA::BufferBase::start() {
+    if (state_ != State::READY || (op_ & Op::WRITE) == 0 || size_ == 0) {
+        // starting a buffer when the state is BUSY is a bug
+        assert(state_ != State::BUSY);
         return false;
     }
-
-    // check if READ flag is set
-    assert((op & Op::READ) != 0);
 
     auto &device = device_;
 
@@ -180,16 +178,17 @@ bool DacDevice_DAC_DMA::BufferBase::start(Op op) {
 }
 
 bool DacDevice_DAC_DMA::BufferBase::cancel() {
-    if (st.state != State::BUSY)
+    if (state_ != State::BUSY)
         return false;
 
-    // always complete normally
+    // not supported, always complete normally
     return true;
 }
 
 void DacDevice_DAC_DMA::BufferBase::handle() {
-    int transferred = capacity_;
-    setReady(transferred);
+    // always transfers full capacity
+    setSuccess(capacity_);
+    setReady();
 }
 
 } // namespace coco

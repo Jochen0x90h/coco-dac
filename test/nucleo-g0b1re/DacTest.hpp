@@ -20,7 +20,7 @@ const gpio::Config dacPins[] = {
 
 
 /// @brief Drivers for DacTest
-/// Make sure the VREF jumper is at default position (1-2)
+/// Make sure SB28 is closed to provice VREF+ (is default)
 struct Drivers {
     Loop_SysTick loop{AHB_CLOCK};
 
