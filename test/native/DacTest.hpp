@@ -7,10 +7,6 @@
 using namespace coco;
 
 
-constexpr auto OFFSET = 127.5;
-constexpr auto AMPLITUDE = 127.5;
-
-
 // drivers for DacTest
 struct Drivers {
     Loop_native loop;

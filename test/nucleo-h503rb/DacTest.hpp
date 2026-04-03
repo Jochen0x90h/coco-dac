@@ -8,12 +8,6 @@
 using namespace coco;
 
 
-//constexpr auto OFFSET = 127.0;
-//constexpr auto AMPLITUDE = 126.0;
-constexpr auto OFFSET = 32000.0;
-constexpr auto AMPLITUDE = 30000.0;
-
-
 // DAC1 pins, use oscilloscope to measure the output
 const gpio::Config dacPins[] = {
     //gpio::PA4, // is VCP_TX

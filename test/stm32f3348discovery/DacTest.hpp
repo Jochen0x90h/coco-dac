@@ -8,10 +8,6 @@
 using namespace coco;
 
 
-constexpr auto OFFSET = 32000.0;
-constexpr auto AMPLITUDE = 30000.0;
-
-
 // DAC1 pins
 const gpio::Config dacPins[] = {
     gpio::PA4, // channel 1 (PA4)

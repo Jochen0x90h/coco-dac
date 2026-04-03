@@ -7,10 +7,11 @@
 
 
 Coroutine write(Loop &loop, Dac &dac) {
-    int i = 0;
+    uint8_t i = 0;
     while (true) {
-        dac.set(0, int(OFFSET + AMPLITUDE * sin((i & 127) * 6.28318530718 / 128.0)));
-        dac.set(1, int(OFFSET + AMPLITUDE * cos((i & 127) * 6.28318530718 / 128.0)));
+        // set level to ADC inputs using ADC
+        dac.set(0, i << 8);
+        dac.set(1, int8_t(i + 128) << 8);
         ++i;
 
         co_await loop.sleep(2ms);

@@ -27,6 +27,7 @@ Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
 #endif
         .enable(channel, config);
 
+    // single channel
 #ifdef HAVE_DAC_DUAL_MODE
     DR_[0] = channel == 0 ? &dac->DHR12L1 : &dac->DHR12L2;
 #else
@@ -56,6 +57,7 @@ Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
 #endif
         .enable(config);
 
+    // dual channel
     DR_[0] = &dac->DHR12L1;
     DR_[1] = &dac->DHR12L2;
     count_ = 2;

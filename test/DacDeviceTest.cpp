@@ -25,7 +25,7 @@ Coroutine write(Loop &loop, Buffer &buffer1, Buffer &buffer2) {
     int j = 0;
     while (true) {
         co_await buffer1.untilReadyOrDisabled();
-        auto data1 = buffer1.pointer<Sample>();
+        auto data1 = buffer1.cast<Array<Sample>>();
         for (int i = 0; i < SAMPLE_COUNT; ++i) {
             data1[i] = table[j & 127];
             ++j;
@@ -38,7 +38,7 @@ Coroutine write(Loop &loop, Buffer &buffer1, Buffer &buffer2) {
         buffer1.startWrite(SAMPLE_COUNT * sizeof(Sample));
 
         co_await buffer2.untilReadyOrDisabled();
-        auto data2 = buffer2.pointer<Sample>();
+        auto data2 = buffer2.cast<Array<Sample>>();
         for (int i = 0; i < SAMPLE_COUNT; ++i) {
             data2[i] = table[j & 127];
             j += 1;

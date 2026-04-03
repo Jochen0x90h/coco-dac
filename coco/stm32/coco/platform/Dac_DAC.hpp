@@ -19,7 +19,7 @@ namespace coco {
 class Dac_DAC : public Dac {
 public:
 
-    /// @brief Constructor for the dual channel ADC device.
+    /// @brief Constructor for single channel.
     /// @param analogPins Analog pins
     /// @param dacInfo Info of DAC to use
     /// @param ahbClock Frequency of AHB clock
@@ -32,7 +32,7 @@ public:
         int channel, dac::Config config);
 
 #ifdef HAVE_DAC_DUAL_MODE
-    /// @brief Constructor for the dual channel ADC device.
+    /// @brief Constructor for dual channel.
     /// @param analogPins Analog pins
     /// @param dacInfo Info of DAC to use
     /// @param ahbClock Frequency of AHB clock
