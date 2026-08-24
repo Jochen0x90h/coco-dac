@@ -42,9 +42,9 @@ struct Drivers {
 
     using Dac = DacDevice_DAC_DMA;
     Dac dac{loop,
-        dacPins,
         //dac::DAC1_INFO,
         dac::DAC3_INFO,
+        dacPins,
         dma::DMA1_CH1_INFO,
         AHB_CLOCK,
         //dac::DualConfig::BUFFERED_EXTERNAL, // DAC1 directly goes to pins

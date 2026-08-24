@@ -21,8 +21,9 @@ struct Drivers {
     Loop_SysTick loop{AHB_CLOCK};
 
     using Dac = Dac_DAC;
-    Dac dac{dacPins,
+    Dac dac{
         dac::DAC1_INFO,
+        dacPins,
         dac::DualConfig::BUFFERED_EXTERNAL}; // DAC1 directly goes to pins
 };
 

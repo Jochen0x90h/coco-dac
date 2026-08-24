@@ -7,7 +7,7 @@
 
 namespace coco {
 
-Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+Dac_DAC::Dac_DAC(const dac::Info &dacInfo, Array<const gpio::Config> analogPins,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
     Hertz<> ahbClock,
 #endif
@@ -37,7 +37,7 @@ Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
 }
 
 #ifdef HAVE_DAC_DUAL_MODE
-Dac_DAC::Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+Dac_DAC::Dac_DAC(const dac::Info &dacInfo, Array<const gpio::Config> analogPins,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
     Hertz<> ahbClock,
 #endif

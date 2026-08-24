@@ -20,12 +20,12 @@ class Dac_DAC : public Dac {
 public:
 
     /// @brief Constructor for single channel.
-    /// @param analogPins Analog pins
     /// @param dacInfo Info of DAC to use
+    /// @param analogPins Analog pins
     /// @param ahbClock Frequency of AHB clock
     /// @param channel Channel index (0 for channel 1, 1 for channel 2)
     /// @param config Configuration of DAC channel
-    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+    Dac_DAC(const dac::Info &dacInfo, Array<const gpio::Config> analogPins,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
         Hertz<> ahbClock,
 #endif
@@ -33,11 +33,11 @@ public:
 
 #ifdef HAVE_DAC_DUAL_MODE
     /// @brief Constructor for dual channel.
-    /// @param analogPins Analog pins
     /// @param dacInfo Info of DAC to use
+    /// @param analogPins Analog pins
     /// @param ahbClock Frequency of AHB clock
     /// @param config Configuration of both DAC channels
-    Dac_DAC(Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+    Dac_DAC(const dac::Info &dacInfo, Array<const gpio::Config> analogPins,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
         Hertz<> ahbClock,
 #endif

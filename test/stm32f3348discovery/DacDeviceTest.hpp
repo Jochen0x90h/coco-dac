@@ -34,8 +34,8 @@ struct Drivers {
 
     using Dac = DacDevice_DAC_DMA;
     Dac dac{loop,
-        dacPins,
         dac::DAC1_INFO,
+        dacPins,
         dma::DMA1_CH3_INFO,
         dac::DualConfig::CH2_OUTPUT_ENABLE, // DAC1 of STM32F3348 has buffer off for channel 1 and output enable for channel 2
         FORMAT,

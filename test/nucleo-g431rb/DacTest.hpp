@@ -21,8 +21,9 @@ struct Drivers {
     Loop_TIM2 loop{APB1_TIMER_CLOCK};
 
     using Dac = Dac_DAC;
-    Dac dac{dacPins,
+    Dac dac{
         dac::DAC1_INFO,
+        dacPins,
         AHB_CLOCK,
         dac::DualConfig::BUFFERED_EXTERNAL}; // DAC1 directly goes to pins
 };

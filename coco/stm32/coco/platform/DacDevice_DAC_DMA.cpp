@@ -7,7 +7,7 @@
 
 namespace coco {
 
-DacDevice_DAC_DMA::DacDevice_DAC_DMA(Loop_Queue &loop, const gpio::Config analogPin, const dac::Info &dacInfo,
+DacDevice_DAC_DMA::DacDevice_DAC_DMA(Loop_Queue &loop, const dac::Info &dacInfo, const gpio::Config analogPin,
     const dma::Info<dma::Feature::CIRCULAR> &dmaInfo,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
     Hertz<> ahbClock,
@@ -48,7 +48,7 @@ DacDevice_DAC_DMA::DacDevice_DAC_DMA(Loop_Queue &loop, const gpio::Config analog
 }
 
 #ifdef HAVE_DAC_DUAL_MODE
-DacDevice_DAC_DMA::DacDevice_DAC_DMA(Loop_Queue &loop, Array<const gpio::Config> analogPins, const dac::Info &dacInfo,
+DacDevice_DAC_DMA::DacDevice_DAC_DMA(Loop_Queue &loop, const dac::Info &dacInfo, Array<const gpio::Config> analogPins,
     const dma::Info<dma::Feature::CIRCULAR> &dmaInfo,
 #ifdef HAVE_DAC_PARAMETER_AHB_CLOCK
     Hertz<> ahbClock,
@@ -185,7 +185,7 @@ bool DacDevice_DAC_DMA::BufferBase::cancel() {
     return true;
 }
 
-void DacDevice_DAC_DMA::BufferBase::handle() {
+void DacDevice_DAC_DMA::BufferBase::onCompletion() {
     // always transfers full capacity
     setSuccess(capacity_);
     setReady();

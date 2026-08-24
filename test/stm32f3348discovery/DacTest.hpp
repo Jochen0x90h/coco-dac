@@ -20,8 +20,9 @@ struct Drivers {
     Loop_TIM2 loop{APB1_TIMER_CLOCK};
 
     using Dac = Dac_DAC;
-    Dac dac{dacPins,
+    Dac dac{
         dac::DAC1_INFO,
+        dacPins,
         dac::DualConfig::CH2_OUTPUT_ENABLE}; // DAC1 of STM32F3348 has buffer off for channel 1 and output enable for channel 2
 };
 
